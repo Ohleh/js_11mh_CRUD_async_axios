@@ -1,6 +1,4 @@
 // GET:      https://pixabay.com/api/
-// API key:  27852972-cf3b4cc0dfb2dc5cda9d2c741
-import axios from 'axios';
 import Notiflix from 'notiflix';
 import { getImages } from './js/getApiImg';
 
@@ -10,13 +8,12 @@ import { getImages } from './js/getApiImg';
 const ref = {
   form: document.querySelector('#search-form'),
   gallery: document.querySelector('.gallery'),
-  input: document.querySelector('.innin'),
-  //   BASE_URL: 'https://pixabay.com/api/',
+  loadBtn: document.querySelector('.load-more'),
 };
-const BASE_URL = 'https://pixabay.com/api';
-const API_KEY = '27852972-cf3b4cc0dfb2dc5cda9d2c741';
+let page = 0;
+let pagetView = 0;
 
-// axios.defaults.headers.common['key'] = 'l27852972-cf3b4cc0dfb2dc5cda9d2c741';
+// let query = ref.form.elements.searchQuery.value;
 
 // let gall = new SimpleLightbox('.galleryLightBox a', {
 //   captionsData: 'alt',
@@ -32,9 +29,9 @@ const createRender = ({
   comments,
   downloads,
 }) => {
-  return `<div class="photo-card" class="galleryLightBox">
+  return `<div class="photo-card" class="galleryS">
   <a class="gallery__link" href="${largeImageURL}">
-  <img src="${webformatURL}" alt="${tags}" loading="lazy" />
+  <img class="gallery__image" src="${webformatURL}" alt="${tags}" loading="lazy"  />
   </a>
   <div class="info">
     <p class="info-item">
@@ -58,14 +55,46 @@ const render = data => {
   ref.gallery.insertAdjacentHTML('beforeend', render);
 };
 
-const onSbmBtn = async e => {
-  e.preventDefault();
-  try {
-    const arrivedData = await getImages(e.target.elements.searchQuery.value);
-    render(arrivedData);
-  } catch (error) {
-    console.log('error in try form arrivedData:', error);
+const showLoadBtln = (hits, totalHits) => {
+  ref.loadBtn.classList.remove('hide');
+  pagetView += hits;
+  const totalPages = totalHits;
+  if (pagetView >= totalPages) {
+    return ref.loadBtn.classList.add('hide');
   }
 };
 
-ref.form.addEventListener('submit', onSbmBtn);
+const getApi = async e => {
+  const q = ref.form.elements.searchQuery.value;
+  try {
+    if (e.type === 'submit') {
+      ref.gallery.innerHTML = '';
+      page = 1;
+      pagetView = 0;
+      ref.loadBtn.classList.add('hide');
+    }
+
+    const arrivedData = await getImages(q, page);
+    if (arrivedData.hits.length === 0) {
+      return Notiflix.Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.',
+        {
+          timeout: 3000,
+        }
+      );
+    }
+    render(arrivedData.hits);
+    showLoadBtln(arrivedData.hits.length, arrivedData.totalHits);
+    page += 1;
+  } catch (error) {
+    console.log('error in try arrivedData:', error);
+  }
+};
+
+const onButton = e => {
+  e.preventDefault();
+  getApi(e);
+};
+
+ref.form.addEventListener('submit', onButton);
+ref.loadBtn.addEventListener('click', onButton);

@@ -1,11 +1,10 @@
-// GET:      https://pixabay.com/api/
 // API key:  27852972-cf3b4cc0dfb2dc5cda9d2c741
 import axios from 'axios';
 
 const BASE_URL = 'https://pixabay.com/api/';
 const API_KEY = '27852972-cf3b4cc0dfb2dc5cda9d2c741';
 
-const getImages = async q => {
+const getImages = async (q, page) => {
   try {
     const images = await axios.get(`${BASE_URL}/?`, {
       params: {
@@ -13,15 +12,13 @@ const getImages = async q => {
         image_type: 'photo',
         orientation: 'horizontal',
         safesearch: true,
-        page: 1,
-        per_page: 40,
+        page,
+        per_page: 20,
         q,
       },
     });
-    if (images.data.hits.length === 0) {
-      return alert('no images');
-    }
-    return images.data.hits;
+
+    return images.data;
   } catch (error) {
     console.log('error in try:', error);
   }

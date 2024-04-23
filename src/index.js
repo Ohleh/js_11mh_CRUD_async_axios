@@ -69,12 +69,19 @@ const getApi = async e => {
   try {
     if (e.type === 'submit') {
       ref.gallery.innerHTML = '';
+      ref.loadBtn.classList.add('hide');
       page = 1;
       pagetView = 0;
-      ref.loadBtn.classList.add('hide');
     }
-
     const arrivedData = await getImages(q, page);
+    if (e.type === 'submit') {
+      Notiflix.Notify.success(
+        `Hooray! We found ${arrivedData.totalHits} images.`,
+        {
+          timeout: 3000,
+        }
+      );
+    }
     if (arrivedData.hits.length === 0) {
       return Notiflix.Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.',

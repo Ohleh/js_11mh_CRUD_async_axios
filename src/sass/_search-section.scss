@@ -1,0 +1,26 @@
+.search__section {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #3d5fce;
+}
+.search-art {
+  padding: 10px;
+}
+input {
+  width: 250px;
+  border: 0.5px solid rgb(255, 255, 255);
+  border-radius: 3px;
+  font-size: 15px;
+  padding: 5px;
+}
+
+input:hover {
+  outline: none;
+  border: 0.5px solid rgb(6, 95, 239);
+}
+input:focus {
+  outline: none;
+  border: 0.5px solid rgb(6, 95, 239);
+}

@@ -29,10 +29,11 @@ const createRender = ({
   comments,
   downloads,
 }) => {
-  return `<div class="photo-card" class="galleryS">
+  return `<div class="photo-card">
   <a class="gallery__link" href="${largeImageURL}">
   <img class="gallery__image" src="${webformatURL}" alt="${tags}" loading="lazy"  />
   </a>
+
   <div class="info">
     <p class="info-item">
       <b>Likes</b> ${likes}
@@ -47,7 +48,8 @@ const createRender = ({
       <b>Downloads</b> ${downloads}
     </p>
   </div>
-</div>`;
+    </div>
+`;
 };
 
 const render = data => {
@@ -75,12 +77,9 @@ const getApi = async e => {
     }
     const arrivedData = await getImages(q, page);
     if (e.type === 'submit') {
-      Notiflix.Notify.success(
-        `Hooray! We found ${arrivedData.totalHits} images.`,
-        {
-          timeout: 3000,
-        }
-      );
+      Notiflix.Notify.success(`${arrivedData.totalHits} images found.`, {
+        timeout: 1000,
+      });
     }
     if (arrivedData.hits.length === 0) {
       return Notiflix.Notify.failure(

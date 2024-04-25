@@ -1,9 +1,8 @@
 // GET:      https://pixabay.com/api/
 import Notiflix from 'notiflix';
-import { getImages } from './js/getApiImg';
-
-// import SimpleLightbox from 'simplelightbox';
+import SimpleLightbox from 'simplelightbox';
 // import 'simplelightbox/dist/simple-lightbox.min.css';
+import { getImages } from './js/getApiImg';
 
 const ref = {
   form: document.querySelector('#search-form'),
@@ -12,13 +11,6 @@ const ref = {
 };
 let page = 0;
 let pagetView = 0;
-
-// let query = ref.form.elements.searchQuery.value;
-
-// let gall = new SimpleLightbox('.galleryLightBox a', {
-//   captionsData: 'alt',
-//   captionDelay: 250,
-// });
 
 const createRender = ({
   webformatURL,
@@ -29,7 +21,7 @@ const createRender = ({
   comments,
   downloads,
 }) => {
-  return `<div class="photo-card">
+  return `<div class="photo-card galleryLightBox">
   <a class="gallery__link" href="${largeImageURL}">
   <img class="gallery__image" src="${webformatURL}" alt="${tags}" loading="lazy"  />
   </a>
@@ -66,6 +58,16 @@ const showLoadBtln = (hits, totalHits) => {
   }
 };
 
+const setLigtBox = () => {
+  let lightbox = new SimpleLightbox('.galleryLightBox a', {
+    captionsData: 'alt',
+    captionDelay: 250,
+  });
+  lightbox.on('show.simplelightbox', function (e) {
+    console.log(e);
+  });
+};
+
 const getApi = async e => {
   const q = ref.form.elements.searchQuery.value;
   try {
@@ -90,6 +92,9 @@ const getApi = async e => {
       );
     }
     render(arrivedData.hits);
+
+    setLigtBox();
+
     showLoadBtln(arrivedData.hits.length, arrivedData.totalHits);
     page += 1;
   } catch (error) {

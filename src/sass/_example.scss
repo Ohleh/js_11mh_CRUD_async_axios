@@ -67,6 +67,14 @@ button {
   border-radius: 3px;
   border: 0.5px solid rgb(255, 255, 255);
 }
+button:active {
+  color: rgb(6, 95, 239);
+  font-size: 15px;
+  padding: 5px 12px;
+  cursor: pointer;
+  border-radius: 3px;
+  border: 0.5px solid rgb(255, 255, 255);
+}
 
 button:hover {
   border: 0.5px solid rgb(6, 95, 239);

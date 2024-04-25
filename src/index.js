@@ -6,11 +6,29 @@ import { getImages } from './js/getApiImg';
 
 const ref = {
   form: document.querySelector('#search-form'),
+  searchBtn: document.querySelector('.searchBtn'),
   gallery: document.querySelector('.gallery'),
   loadBtn: document.querySelector('.load-more'),
 };
+ref.searchBtn.disabled = true;
 let page = 0;
 let pagetView = 0;
+
+const onInputCheck = e => {
+  if (ref.form.elements.searchQuery.value !== '') {
+    ref.searchBtn.disabled = false;
+  }
+  if (ref.form.elements.searchQuery.value === '') {
+    ref.searchBtn.disabled = true;
+  }
+  if (ref.form.elements.searchQuery.value === ' ') {
+    ref.searchBtn.disabled = true;
+    ref.form.elements.searchQuery.value = '';
+    return Notiflix.Notify.info('Enter full name', {
+      timeout: 2000,
+    });
+  }
+};
 
 const createRender = ({
   webformatURL,
@@ -54,6 +72,7 @@ const showLoadBtln = (hits, totalHits) => {
   pagetView += hits;
   const totalPages = totalHits;
   if (pagetView >= totalPages) {
+    loadBtnCheckScroll();
     return ref.loadBtn.classList.add('hide');
   }
 };
@@ -63,13 +82,11 @@ const setLigtBox = () => {
     captionsData: 'alt',
     captionDelay: 250,
   });
-  lightbox.on('show.simplelightbox', function (e) {
-    console.log(e);
-  });
+  lightbox.on('show.simplelightbox', function (e) {});
 };
 
 const getApi = async e => {
-  const q = ref.form.elements.searchQuery.value;
+  const q = ref.form.elements.searchQuery.value.trim();
   try {
     if (e.type === 'submit') {
       ref.gallery.innerHTML = '';
@@ -78,7 +95,7 @@ const getApi = async e => {
       pagetView = 0;
     }
     const arrivedData = await getImages(q, page);
-    if (e.type === 'submit') {
+    if (e.type === 'submit' && arrivedData.totalHits.length === 0) {
       Notiflix.Notify.success(`${arrivedData.totalHits} images found.`, {
         timeout: 1000,
       });
@@ -107,5 +124,23 @@ const onButton = e => {
   getApi(e);
 };
 
+const onWindowScroll = () => {
+  const { height: cardHeight } = document
+    .querySelector('.gallery')
+    .firstElementChild.getBoundingClientRect();
+  window.scrollBy({
+    top: 300,
+    behavior: 'smooth',
+  });
+  console.log(cardHeight);
+};
+
+function loadBtnCheckScroll() {
+  window.removeEventListener('scroll', onWindowScroll);
+}
+
+window.addEventListener('scroll', onWindowScroll);
+
 ref.form.addEventListener('submit', onButton);
 ref.loadBtn.addEventListener('click', onButton);
+ref.form.addEventListener('input', onInputCheck);

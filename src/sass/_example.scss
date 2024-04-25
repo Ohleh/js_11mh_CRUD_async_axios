@@ -79,3 +79,10 @@ button:active {
 button:hover {
   border: 0.5px solid rgb(6, 95, 239);
 }
+
+*:disabled {
+  color: #3d5fce;
+  border: 0.5px solid rgb(6, 95, 239);
+  // background-color: dimgrey;
+  opacity: 100;
+}

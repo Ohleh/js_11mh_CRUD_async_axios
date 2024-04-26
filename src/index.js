@@ -10,6 +10,7 @@ const ref = {
   gallery: document.querySelector('.gallery'),
   loadBtn: document.querySelector('.load-more'),
 };
+
 ref.searchBtn.disabled = true;
 let page = 0;
 let pagetView = 0;
@@ -72,7 +73,6 @@ const showLoadBtln = (hits, totalHits) => {
   pagetView += hits;
   const totalPages = totalHits;
   if (pagetView >= totalPages) {
-    loadBtnCheckScroll();
     return ref.loadBtn.classList.add('hide');
   }
 };
@@ -124,23 +124,18 @@ const onButton = e => {
   getApi(e);
 };
 
-const onWindowScroll = () => {
-  const { height: cardHeight } = document
-    .querySelector('.gallery')
-    .firstElementChild.getBoundingClientRect();
-  window.scrollBy({
-    top: 300,
-    behavior: 'smooth',
-  });
-  console.log(cardHeight);
-};
+// const onScroll = e => {
+//   const { height: cardHeight } = document
+//     .querySelector('.gallery')
+//     .firstElementChild.getBoundingClientRect();
 
-function loadBtnCheckScroll() {
-  window.removeEventListener('scroll', onWindowScroll);
-}
-
-window.addEventListener('scroll', onWindowScroll);
+//   window.scrollBy({
+//     top: cardHeight * 2,
+//     behavior: 'smooth',
+//   });
+// };
 
 ref.form.addEventListener('submit', onButton);
 ref.loadBtn.addEventListener('click', onButton);
 ref.form.addEventListener('input', onInputCheck);
+// document.addEventListener('scroll', onScroll);

@@ -82,7 +82,8 @@ button:hover {
 
 *:disabled {
   color: #3d5fce;
+  // -webkit-text-fill-color: #3d5fce;
   border: 0.5px solid rgb(6, 95, 239);
-  // background-color: dimgrey;
+  background-color: rgb(123, 169, 243);
   opacity: 100;
 }
